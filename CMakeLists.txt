@@ -21,13 +21,23 @@ os_set_flags()
 # macro definition located at "CMake/global_config.cmake"
 global_set_flags()
 
-if(BUILD_SHARED_LIBS)
-  message(STATUS "add_library(${LRS_TARGET} SHARED)")
-  add_library(${LRS_TARGET} SHARED "")
-endif()
+message(STATUS "add_library: ${LRS_TARGET} STATIC: ${BUILD_STATIC_LIBS} SHARED: ${BUILD_SHARED_LIBS}")
+add_library(${LRS_TARGET} OBJECT "")
 if(BUILD_STATIC_LIBS)
-  message(STATUS "add_library(${LRS_TARGET}_static STATIC)")
-  add_library(${LRS_TARGET}_static STATIC "")
+  add_library(${LRS_TARGET}_static STATIC $<TARGET_OBJECTS:${LRS_TARGET}>)
+  set_target_properties(${LRS_TARGET}_static PROPERTIES
+    OUTPUT_NAME ${LRS_TARGET}
+    VERSION ${REALUVC_VERSION_STRING}
+    SOVERSION ${REALUVC_VERSION_MAJOR}
+)
+endif()
+if(BUILD_SHARED_LIBS)
+  add_library(${LRS_TARGET}_shared SHARED $<TARGET_OBJECTS:${LRS_TARGET}>)
+  set_target_properties(${LRS_TARGET}_shared PROPERTIES
+    OUTPUT_NAME ${LRS_TARGET}
+    VERSION ${REALUVC_VERSION_STRING}
+    SOVERSION ${REALUVC_VERSION_MAJOR}
+)
 endif()
 
 # add_OpenCV()
@@ -48,13 +58,6 @@ os_target_config()
 include(include/CMakeLists.txt)
 include(src/CMakeLists.txt)
 include(third-party/CMakeLists.txt)
-
-# set library version
-set_target_properties(${LRS_TARGET} PROPERTIES
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
-  VERSION ${REALUVC_VERSION_STRING}
-  SOVERSION ${REALUVC_VERSION_MAJOR}
-)
 
 add_subdirectory(wrappers)
 
