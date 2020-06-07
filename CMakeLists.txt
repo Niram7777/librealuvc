@@ -22,27 +22,8 @@ os_set_flags()
 global_set_flags()
 
 message(STATUS "add_library: ${LRS_TARGET} STATIC: ${BUILD_STATIC_LIBS} SHARED: ${BUILD_SHARED_LIBS}")
-add_library(${LRS_TARGET} OBJECT "")
-if(BUILD_STATIC_LIBS)
-  add_library(${LRS_TARGET}_static STATIC $<TARGET_OBJECTS:${LRS_TARGET}>)
-  set_target_properties(${LRS_TARGET}_static PROPERTIES
-    OUTPUT_NAME ${LRS_TARGET}
-    VERSION ${REALUVC_VERSION_STRING}
-    SOVERSION ${REALUVC_VERSION_MAJOR}
-)
-endif()
-if(BUILD_SHARED_LIBS)
-  add_library(${LRS_TARGET}_shared SHARED $<TARGET_OBJECTS:${LRS_TARGET}>)
-  set_target_properties(${LRS_TARGET}_shared PROPERTIES
-    OUTPUT_NAME ${LRS_TARGET}
-    VERSION ${REALUVC_VERSION_STRING}
-    SOVERSION ${REALUVC_VERSION_MAJOR}
-)
-  set_property(TARGET ${LRS_TARGET}_shared
-    PROPERTY
-      EXPORT_NAME ${LRS_TARGET}
-)
-endif()
+add_library(${LRS_TARGET} "")
+set_target_properties(${LRS_TARGET} PROPERTIES VERSION ${REALUVC_VERSION_STRING} SOVERSION ${REALUVC_VERSION_MAJOR})
 
 # add_OpenCV()
 find_package(OpenCV REQUIRED)

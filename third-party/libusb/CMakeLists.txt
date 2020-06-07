@@ -48,7 +48,7 @@ set(LIBUSB_H
     libusb/libusb.h
 )
 
-add_library(usb STATIC ${LIBUSB_C} ${LIBUSB_H})
+add_library(usb ${LIBUSB_C} ${LIBUSB_H})
 
 target_include_directories(usb
   PUBLIC
